@@ -1,0 +1,145 @@
+<template>
+    <div class="overflow-x-auto xl:overflow-x-hidden">
+        <table class="text-sm text-gray-300 min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-800 text-md font-medium">
+                <tr>
+                    <th></th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Name</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Symbol</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Price (USD)</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">24h Volume</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">24h</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider whitespace-nowrap">7 days</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Market Cap</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider"># of Market Pairs</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Circulating Supply</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Max Supply</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Infinite Supply?</th>
+
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                <tr v-for="(crypto, index) in displayedCryptos" :key="index"
+                    :class="index % 2 === 0 ? 'bg-black bg-opacity-20' : ''">
+                    <td class="pl-4">
+                        {{ crypto.cmc_rank }}
+                    </td>
+                    <td class="flex px-6 py-4 whitespace-nowrap">{{ crypto.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ crypto.symbol }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.quote.USD.price) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.quote.USD.volume_24h) }}
+                    </td>
+                    <td
+                        :class="crypto.quote.USD.percent_change_24h > 0 ? 'text-green-700 font-bold px-6 py-4 whitespace-nowrap' : 'text-red-700 font-bold px-6 py-4 whitespace-nowrap'">
+                        {{
+                            formatPrice(crypto.quote.USD.percent_change_24h) }}%</td>
+                    <td
+                        :class="crypto.quote.USD.percent_change_7d > 0 ? 'text-green-700 font-bold px-6 py-4 whitespace-nowrap' : 'text-red-700 font-bold px-6 py-4 whitespace-nowrap'">
+                        {{
+                            formatPrice(crypto.quote.USD.percent_change_7d) }}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${{ formatBigNumber(crypto.quote.USD.market_cap)
+                    }}
+                    </td>
+
+                    <td class="px-6 py-4 whitespace-nowrap">{{ crypto.num_market_pairs }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.circulating_supply) }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.max_supply) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-yellow-400">{{
+                        formatBoolean(crypto.infinite_supply) }}</td>
+
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class=" py-4">
+        <ul class="flex justify-center -space-x-px h-10 text-base">
+            <button @click="previousPage" :disabled="currentPage === 1">
+                <a
+                    class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-400 border  rounded-l-lg  bg-gray-900  border-none  hover:bg-gray-700 hover:text-white">
+                    <span class="sr-only">Previous</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 1 1 5l4 4" />
+                    </svg>
+                </a>
+            </button>
+            <span
+                class="flex items-center justify-center px-4 h-10 leading-tight text-gray-400 border  bg-gray-900  border-none  hover:bg-gray-700 ">
+                Page {{ currentPage }} of {{ totalPages }}</span>
+            <button @click="nextPage" :disabled="currentPage === totalPages">
+                <a
+                    class="flex items-center justify-center px-4 h-10 leading-tight text-gray-400 border  rounded-r-lg  bg-gray-900  border-none  hover:bg-gray-700 hover:text-white">
+                    <span class="sr-only">Next</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                </a>
+            </button>
+        </ul>
+
+
+    </div>
+</template>
+
+<script>
+export default {
+    name: "CryptoTable",
+    props: {
+        cryptos: String,
+    },
+    data() {
+        return {
+
+            itemsPerPage: 10,
+            currentPage: 1,
+        };
+    },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.cryptos.length / this.itemsPerPage);
+        },
+        displayedCryptos() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            return this.cryptos.slice(startIndex, endIndex);
+        },
+    },
+    methods: {
+        previousPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+            }
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+            }
+        },
+        formatBigNumber(price) {
+            if (price >= 1000000) {
+                return (price / 1000000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'M';
+            } else if (price >= 1000) {
+                return (price / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'k';
+            }
+            return price.toFixed(2);
+
+        },
+        formatPrice(price) {
+
+            if (typeof price === 'number') {
+                return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+            return price;
+        },
+        formatBoolean(value) {
+            return value ? 'Yes' : 'No';
+        }
+    }
+};
+</script>
