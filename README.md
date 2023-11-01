@@ -1,4 +1,4 @@
-# CryptaFLux
+# CryptaFlux
 
 Just A simple one-page web app for showing the API calls from coinmarketcap.com.  If the table isn't visible, it's possible that the daily request limit has been reached.
 
