@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-800 text-white selection:bg-indigo-500 selection:text-white">
+  <main class="min-h-screen bg-gray-800 text-white selection:bg-indigo-500 selection:text-white" id="app">
     <NavigationMenu />
     <HomePage />
     <app-footer />
 
-  </div>
+  </main>
 </template>
 
 <script>

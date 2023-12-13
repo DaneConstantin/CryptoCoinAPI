@@ -4,17 +4,15 @@
             <thead class="bg-gray-800 text-md font-medium">
                 <tr>
                     <th></th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider"></th>
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">Name</th>
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">Symbol</th>
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">Price (USD)</th>
-                    <th scope="col" class="px-6 py-3 text-left tracking-wider">24h Volume</th>
-                    <th scope="col" class="px-6 py-3 text-left tracking-wider">24h</th>
-                    <th scope="col" class="px-6 py-3 text-left tracking-wider whitespace-nowrap">7 days</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">24h Change</th>
+                    <th scope="col" class="px-6 py-3 text-left tracking-wider">24h %</th>
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">Market Cap</th>
-                    <th scope="col" class="px-6 py-3 text-left tracking-wider"># of Market Pairs</th>
-                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Circulating Supply</th>
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">Max Supply</th>
-                    <th scope="col" class="px-6 py-3 text-left tracking-wider">Infinite Supply?</th>
+
 
                 </tr>
             </thead>
@@ -22,31 +20,27 @@
                 <tr v-for="(crypto, index) in displayedCryptos" :key="index"
                     :class="index % 2 === 0 ? 'bg-black bg-opacity-20' : ''">
                     <td class="pl-4">
-                        {{ crypto.cmc_rank }}
+                        {{ crypto.market_cap_rank }}
+                    </td>
+                    <td class="pl-4">
+                        <img :src="crypto.image" style="width: 30px;" />
                     </td>
                     <td class="flex px-6 py-4 whitespace-nowrap">{{ crypto.name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ crypto.symbol }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.quote.USD.price) }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.quote.USD.volume_24h) }}
+                    <td class="px-6 py-4 whitespace-nowrap uppercase">{{ crypto.symbol }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.current_price) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.price_change_24h) }}
                     </td>
                     <td
-                        :class="crypto.quote.USD.percent_change_24h > 0 ? 'text-green-700 font-bold px-6 py-4 whitespace-nowrap' : 'text-red-700 font-bold px-6 py-4 whitespace-nowrap'">
+                        :class="crypto.price_change_percentage_24h > 0 ? 'text-green-700 font-bold px-6 py-4 whitespace-nowrap' : 'text-red-700 font-bold px-6 py-4 whitespace-nowrap'">
                         {{
-                            formatPrice(crypto.quote.USD.percent_change_24h) }}%</td>
-                    <td
-                        :class="crypto.quote.USD.percent_change_7d > 0 ? 'text-green-700 font-bold px-6 py-4 whitespace-nowrap' : 'text-red-700 font-bold px-6 py-4 whitespace-nowrap'">
-                        {{
-                            formatPrice(crypto.quote.USD.percent_change_7d) }}%</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${{ formatBigNumber(crypto.quote.USD.market_cap)
+                            formatPrice(crypto.price_change_percentage_24h) }}%</td>
+
+                    <td class="px-6 py-4 whitespace-nowrap">${{ formatBigNumber(crypto.market_cap)
                     }}
                     </td>
 
-                    <td class="px-6 py-4 whitespace-nowrap">{{ crypto.num_market_pairs }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.circulating_supply) }}
+                    <td class="px-6 py-4 whitespace-nowrap">{{ crypto.max_supply ? formatPrice(crypto.max_supply) : '∞' }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.max_supply) }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-yellow-400">{{
-                        formatBoolean(crypto.infinite_supply) }}</td>
 
                 </tr>
             </tbody>

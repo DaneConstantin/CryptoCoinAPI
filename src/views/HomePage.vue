@@ -3,7 +3,8 @@
         <div class="container relative z-20 mx-auto grid grid-cols-1 gap-x-4 gap-y-20 py-16 lg:grid-cols-2">
             <div class="flex flex-col items-center justify-center text-center lg:items-start lg:text-left">
                 <h1 class="mb-4 text-6xl font-bold xl:text-7xl">Cryptaflux</h1>
-                <h2 class="mb-12 text-4xl font-bold text-teal-400  decoration-indigo-400/30 xl:text-5xl">Blockchain Project</h2>
+                <h2 class="mb-12 text-4xl font-bold text-teal-400  decoration-indigo-400/30 xl:text-5xl">Blockchain Project
+                </h2>
                 <p class="text-md mb-10 font-medium text-gray-300 xl:text-lg">
                     Meet a collection of 1000+ amazing figures
                     with different attributes and styles!
@@ -47,7 +48,14 @@
                 <span class="text-red-600 text-4xl animate-ping pr-1">●</span>Live Market
             </h3>
             <div class="py-2 align-middle xl:max-w-[1350px] xl:mx-auto">
-                <CryptoTable :cryptos="cryptos" />
+                <div v-if="cryptos === null">
+
+                    <p>Loading...</p>
+                </div>
+                <div v-else>
+
+                    <CryptoTable :cryptos="cryptos" />
+                </div>
             </div>
         </section>
 
@@ -79,7 +87,7 @@ export default {
     data() {
         return {
 
-            cryptos: [],
+            cryptos: null,
             imageSrcTwo: "./images/NFTTwo.png",
             imageSrcOne: "./images/NFTOne.png",
             steps: [
@@ -108,22 +116,16 @@ export default {
     {
 
         async fetchData() {
-            const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest`;
-            await fetch(url, {
-                method: "GET",
-                headers: {
-                    "sec-fetch-mode": "no-cors",
-                    "Content-Type": "application/json",
-                    'X-CMC_PRO_API_KEY': process.env.VUE_APP_CMC_PRO_API_KEY,
-                },
-            }).then(response => response.text())
-                .then(text => {
-                    var obj = JSON.parse(text);
+            try {
+                const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&sparkline=false&locale=en`;
 
-                    this.cryptos = obj.data;
-                })
+                const response = await fetch(url);
+                const json = await response.json();
+                this.cryptos = json;
+            } catch (error) {
+                console.error("Error fetching data:", error);
 
-
+            }
 
         }
     }
