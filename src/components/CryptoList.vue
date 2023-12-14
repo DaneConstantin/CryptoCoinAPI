@@ -12,37 +12,68 @@
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">24h %</th>
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">Market Cap</th>
                     <th scope="col" class="px-6 py-3 text-left tracking-wider">Max Supply</th>
-
-
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                <tr v-for="(crypto, index) in displayedCryptos" :key="index"
-                    :class="index % 2 === 0 ? 'bg-black bg-opacity-20' : ''">
-                    <td class="pl-4">
-                        {{ crypto.market_cap_rank }}
-                    </td>
-                    <td class="pl-4">
-                        <img :src="crypto.image" style="width: 30px;" />
-                    </td>
-                    <td class="flex px-6 py-4 whitespace-nowrap">{{ crypto.name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap uppercase">{{ crypto.symbol }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.current_price) }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.price_change_24h) }}
-                    </td>
-                    <td
-                        :class="crypto.price_change_percentage_24h > 0 ? 'text-green-700 font-bold px-6 py-4 whitespace-nowrap' : 'text-red-700 font-bold px-6 py-4 whitespace-nowrap'">
-                        {{
-                            formatPrice(crypto.price_change_percentage_24h) }}%</td>
 
-                    <td class="px-6 py-4 whitespace-nowrap">${{ formatBigNumber(crypto.market_cap)
-                    }}
-                    </td>
 
-                    <td class="px-6 py-4 whitespace-nowrap">{{ crypto.max_supply ? formatPrice(crypto.max_supply) : '∞' }}
-                    </td>
+                <template v-for="(crypto, index) in displayedCryptos" :key="index">
+                    <tr :class="index % 2 === 0 ? 'bg-black bg-opacity-20' : ''" @click="toggleOpen(index, crypto.id)">
+                        <td :class="index % 2 === 0 ? 'bg-black bg-opacity-20' : ''">
 
-                </tr>
+                            <div class="pl-4">
+                                {{ crypto.market_cap_rank }}
+                            </div>
+
+                        </td>
+                        <td class="pl-4">
+                            <img :src="crypto.image" style="width: 30px;" />
+                        </td>
+                        <td class="flex px-6 py-4 whitespace-nowrap">{{ crypto.name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap uppercase">{{ crypto.symbol }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.current_price) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.price_change_24h) }}
+                        </td>
+                        <td
+                            :class="crypto.price_change_percentage_24h > 0 ? 'text-green-700 font-bold px-6 py-4 whitespace-nowrap' : 'text-red-700 font-bold px-6 py-4 whitespace-nowrap'">
+                            {{
+                                formatPrice(crypto.price_change_percentage_24h) }}%</td>
+
+                        <td class="px-6 py-4 whitespace-nowrap">${{ formatBigNumber(crypto.market_cap)
+                        }}
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap">{{ crypto.max_supply ? formatPrice(crypto.max_supply) : '∞'
+                        }}
+                        </td>
+                    </tr>
+                    <tr v-if="openRow === index && coininfo">
+                        <div class="flex flex-wrap gap-4 p-8">
+                            <div class="flex flex-shrink-0">
+                                <img :src="coininfo[0]?.image" alt="Coin Image" class="w-16 h-16">
+                                <p class="text-lg font-bold">{{ coininfo[0].name }} ({{ coininfo[0].symbol }})</p>
+                            </div>
+                            <div class="flex-grow">
+
+                                <div class="flex items-center space-x-2">
+                                    <p class="text-gray-500">Current Price: {{ coininfo[0].current_price }}</p>
+                                    <p class="text-gray-500">Market Cap: {{ coininfo[0].market_cap }}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <p class="text-gray-500">24h High: {{ coininfo[0].high_24h }}</p>
+                                    <p class="text-gray-500">24h Low: {{ coininfo[0].low_24h }}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <p class="text-gray-500">Price Change 24h: {{ coininfo[0].price_change_24h }}
+                                    </p>
+                                    <p class="text-gray-500">Change Percentage 24h: {{
+                                        coininfo[0].price_change_percentage_24h }}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </tr>
+
+                </template>
             </tbody>
         </table>
 
@@ -89,9 +120,10 @@ export default {
     },
     data() {
         return {
-
+            openRow: null,
             itemsPerPage: 10,
             currentPage: 1,
+            coininfo: null
         };
     },
     computed: {
@@ -104,7 +136,28 @@ export default {
             return this.cryptos.slice(startIndex, endIndex);
         },
     },
+
     methods: {
+        toggleOpen(index, crypto) {
+            this.openRow = this.openRow === index ? null : index;
+            if (this.openRow) {
+                this.fetchData(crypto);
+            }
+
+        },
+        async fetchData(coinId) {
+            try {
+                const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinId}&x_cg_api_key=CG-LB7JofPBFMu7ZreiHyfmHrJx`;
+                const response = await fetch(url);
+                this.coininfo = await response.json([0]);
+
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+
+            }
+
+        },
         previousPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
