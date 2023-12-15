@@ -1,6 +1,6 @@
 <template>
     
-    <table class="block text-sm  text-gray-300 max-w-[350px] md:max-w-[750px] lg:max-w-[1000px] xl:max-w-full divide-y divide-gray-200 overflow-x-auto xl:overflow-x-hidden mx-auto">
+    <table class="block text-sm  text-gray-300 w-[calc(100vw-82px)] lg:w-[1000px] divide-y divide-gray-200 overflow-x-auto xl:overflow-x-hidden mx-auto table-fixed">
         <thead class="bg-gray-800 text-md font-medium">
             <tr>
                 <th></th>
@@ -16,14 +16,14 @@
         </thead>
         <tbody class="divide-y divide-gray-300 ">
             <template v-for="(crypto, index) in displayedCryptos" :key="index">
-                <tr :class="index % 2 === 0 ? 'bg-black bg-opacity-20' : ''" @click="toggleOpen(index, crypto.id)">
-                    <td class="pl-4">
+                <tr :class="index % 2 === 0 ? 'bg-black bg-opacity-20 h-[60px]' : ' h-[60px]'" @click="toggleOpen(index, crypto.id)">
+                    <td class="p-4 w-[50px]">
                         {{ crypto.market_cap_rank }}
                     </td>
-                    <td class="pl-4">
-                        <img :src="crypto.image" style="width: 30px;" />
+                    <td class="p-4 w-[50px]">
+                        <img :src="crypto.image" style="width: 50px;" />
                     </td>
-                    <td class="flex px-6 py-4 whitespace-nowrap">{{ crypto.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ crypto.name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap uppercase">{{ crypto.symbol }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">${{ formatPrice(crypto.current_price) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ formatPrice(crypto.price_change_24h) }}
@@ -41,44 +41,39 @@
                     }}
                     </td>
                 </tr>
-                <tr :colspan="7" v-if="openRow === index">
-                    <td>
+                <tr v-if="openRow === index">
 
+                    <td :colspan="2" class="w-[50px]">
+                        <p class="text-lg  px-6 py-3">{{ crypto.name }} <br> Info:</p>
                     </td>
-                    <td>
-                        <p class="text-lg  p-8">Extra Info:</p>
-                    </td>
-                    <td>
-                        <p class="text-lg  p-8">{{ crypto.name }} ({{ crypto.symbol }})</p>
-                    </td>
-
-                    <td>
-                        <div class="flex flex-col space-y-2 p-8">
+                   
+                    <td >
+                        <div class="flex flex-col space-y-2 px-4 py-3">
                             <p class="text-gray-400">All Time High:<br> ${{ formatPrice(crypto.ath) }}</p>
                             <p class="text-gray-400">All Time High Date:<br> {{ formatDate(crypto.ath_date) }}</p>
                         </div>
                     </td>
-                    <td>
-                        <div class="flex flex-col space-y-2 p-8">
+                    <td >
+                        <div class="flex flex-col space-y-2 px-4 py-3">
                             <p class="text-gray-400">All Time Low: <br>${{ formatPrice(crypto.atl) }}</p>
                             <p class="text-gray-400">All Time Low Date:<br> {{ formatDate(crypto.atl_date) }}</p>
                         </div>
                     </td>
-                    <td>
-                        <div class="flex flex-col space-y-2 p-8">
+                    <td >
+                        <div class="flex flex-col space-y-2 px-4 py-3">
                             <p class="text-gray-400">24h High: <br>${{ formatPrice(crypto.high_24h) }}</p>
                             <p class="text-gray-400">24h Low:<br> ${{ crypto.low_24h }}</p>
                         </div>
                     </td>
-                    <td>
-                        <div class="flex flex-col space-y-2 p-8">
+                    <td >
+                        <div class="flex flex-col space-y-2 px-4 py-3">
                             <p class="text-gray-400">Price Change 24h:<br> ${{ formatPrice(crypto.price_change_24h) }}</p>
                             <p class="text-gray-400">Change Percentage 24h:<br> {{ formatPrice(crypto.price_change_percentage_24h) }}%
                             </p>
                         </div>
                     </td>
                     <td :colspan="2">
-                        <div class="flex flex-col space-y-2 p-8">
+                        <div class="flex flex-col space-y-2 px-4 py-3">
                             <p class="text-gray-400">Market Cap Change 24h:<br> ${{ formatPrice(crypto.market_cap_change_24h) }}</p>
                             <p class="text-gray-400">Market Cap Change Percentage 24h:<br> {{ formatPrice(crypto.market_cap_change_percentage_24h) }}%
                             </p>
