@@ -27,12 +27,12 @@
                 class="container mb-4 text-center text-3xl font-semibold  decoration-indigo-500/80 lg:text-left xl:text-4xl">
                 <span class="text-red-600 text-4xl animate-ping pr-1">●</span>Live Market
             </h3>
-            <div class="py-2 align-middle xl:max-w-[1350px] xl:mx-auto">
+            <div class="py-2 align-middle  xl:mx-auto">
                 <div v-if="cryptos === null">
 
                     <p>Loading...</p>
                 </div>
-                <div v-else>
+                <div v-else class="flex flex-col items-center justify-center ">
 
                     <CryptoTable :cryptos="cryptos" />
                 </div>
