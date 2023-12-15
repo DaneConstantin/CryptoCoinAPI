@@ -1,4 +1,4 @@
-<div align='center'>![cryptologo](https://github.com/DaneConstantin/CryptoCoinAPI/assets/145013631/f79a0b66-a687-4396-bd17-f70c05d45696)
+<div align='center'><img src='https://github.com/DaneConstantin/CryptoCoinAPI/assets/145013631/f79a0b66-a687-4396-bd17-f70c05d45696' />
 </div>
 
 <h2>About the project</h2>
@@ -23,7 +23,7 @@ The website is connected to the Coingecko API, which is a popular source of data
 <h3 align='center'>Home Page 🏡</h3>
 
 <div align='center'>
-![fullscreenshot](https://github.com/DaneConstantin/CryptoCoinAPI/assets/145013631/fde695c7-97fb-486b-9d1d-31372fc3b4dd)
+<img src='https://github.com/DaneConstantin/CryptoCoinAPI/assets/145013631/fde695c7-97fb-486b-9d1d-31372fc3b4dd' />
 
 </div>
 
@@ -32,6 +32,6 @@ The website is connected to the Coingecko API, which is a popular source of data
 <h3 align='center'>Table</h3>
 
 <div align='center'>
-![table](https://github.com/DaneConstantin/CryptoCoinAPI/assets/145013631/3059dd58-aaf2-4130-bad4-08909df38c7a)
+<img src='https://github.com/DaneConstantin/CryptoCoinAPI/assets/145013631/3059dd58-aaf2-4130-bad4-08909df38c7a' />
 
 </div>
